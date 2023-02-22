@@ -2,16 +2,15 @@
 @section('content')
 
    <h1>未来24時間の注入率を予測</h1>
-   @if (empty($mlcond_id))
+   @if (empty($mlcond_id) && empty($mlconditionID))
       <h5>※学習モデルが選択されていません。</h5>
    @else
       <h5>※学習モデル No.{{$mlcond_id}} 
       @foreach($mlconds as $pref)
-         @if (isset($mlcond_id) && ($mlcond_id == $pref->id)) {{ $pref->name }} @endif
+         @if ((isset($mlcond_id) && ($mlcond_id == $pref->id)) || (isset($mlconditionID) && ($mlconditionID == $pref->id))) {{ $pref->name }} @endif
       @endforeach
-      を使って予測しています。</h5>
+      を使って予測できます。</h5>
    @endif
-
 
 <!-- //* 検索機能ここから *// -->
 <h3>■学習モデルの指定</h3>
@@ -25,19 +24,20 @@
             <select type="text" class="form-control" id="mlcond" name="mlcond" required>
                 <option disabled style='display:none;' @if (empty($mlcond_id)) selected @endif>選択してください</option>
                 @foreach($mlconds as $pref)
-                <option value="{{ $pref->id }}" @if (isset($mlcond_id) && ($mlcond_id == $pref->id)) selected @endif>{{ $pref->name }}</option>
+                <option value="{{ $pref->id }}" @if ((isset($mlcond_id) && ($mlcond_id == $pref->id)) || (isset($mlconditionID) && ($mlconditionID == $pref->id))) selected @endif>{{ $pref->name }}</option>
                 @endforeach
             </select>
 
-            <input type="submit" class="btn" value="設定">
+            <input type="submit" class="btn" value="モデルを設定">
+            @if ((!empty($mlcond_id)) || (!empty($mlconditionID)))
+            <form action="python" method="POST">
+               <input type="submit" class="btn" name="submit" value="このモデルで予測">
+            </form>
+            @endif
          </label>
       </div>
    </form>
 </div>
-<form action="python" method="POST">
-    @csrf
-    <input type="submit" name="submit">
-</form>
 <!-- //* 検索機能ここまで *// ->
 
 

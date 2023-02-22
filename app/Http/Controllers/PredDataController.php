@@ -16,9 +16,21 @@ class PredDataController extends Controller
     {
         // kadecの起点はuvb計測が始まる'2022/08/14' とする
         $_startday = '2022/08/14';
+        // 学習モデル一覧を取得
+        $mlconds = MlconditionData::where('favorite','=',1)->get();
+
+        // 予測用モデルの選択値をデータベースから取得
+        $t24 = T24Data::first();
 
         // 学習モデルの選択値をフォームから取得
         $mlcond_id = $request->input('mlcond');
+
+        // 学習モデルの選択値をデータベースに保存
+        if(!empty($mlcond_id)) {
+            $t24 = T24Data::first();
+            $t24->mlconditionID = $mlcond_id;
+            $t24->save();
+        }
 
         // kadecの最小・最大データ（起点から現在までの）
         $min_uvb = KadecData::where('day','>',$_startday)->min('uvb');
@@ -38,16 +50,6 @@ class PredDataController extends Controller
         $high_temperature = $max_temperature * 0.8;
         $high_humidity = $max_humidity * 0.8;
         $high_windspeed = $max_windspeed * 0.8;
-
-        //
-        if(!empty($mlcond_id)) {
-            $t24 = T24Data::first();
-            $t24->mlconditionID = $mlcond_id;
-            $t24->save();
-        }
-
-        // 学習モデルを取得
-        $mlconds = MlconditionData::where('favorite','=',1)->get();
 
         // kadexデータを取得
         $kadecs = KadecData::where('day','>',$_startday)->get();
@@ -113,6 +115,7 @@ class PredDataController extends Controller
                 break;
         }
 
+        $mlconditionID = $t24->mlconditionID;
         // 
         $label = $hms_log;
         $green_log = $uvb_log;
@@ -122,6 +125,7 @@ class PredDataController extends Controller
         $yyyy_log = $y2_log;
 
         return view('pred',[
+            "mlconditionID" => $mlconditionID,
             "mlconds" => $mlconds,
             "mlcond_id" => $mlcond_id,
             "label" => $label,
