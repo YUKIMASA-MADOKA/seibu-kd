@@ -14,8 +14,14 @@ class KadecDataController extends Controller
         // 起点はuvb計測が始まる'2022/08/14' 終点はKADECの最終日
         $_startday = '2022/08/14';
         $_endday = KadecData::where('day','>',$_startday)->max('day');
-        // $_today = date("Y/m/d");
+
+        // 表示する時間の調整　初期値は0600から現在時まで　ただし0600データに未達の場合は存在する時刻から
         $_hms = substr(date("Y/m/d H:i:s"),11,5);
+        $_endhms = KadecData::where('day','>',$_startday)->where('day',$_endday)->max('hms');
+        $_starthms = '06:00'; 
+        if ($_endhms < $_starthms){
+            $_starthms = $_endhms;
+        }
 
         // 最小・最大データ（起点から現在までの）
         $min_uvb = KadecData::where('day','>',$_startday)->min('uvb');
@@ -37,7 +43,7 @@ class KadecDataController extends Controller
         $high_windspeed = $max_windspeed * 0.8;
 
         // 本日のデータを取得（取得できないときにはエラー表示）
-        $test = KadecData::where('day',$_endday)->where('hms','>','06:00')->where('hms','<=',$_hms)->get();
+        $test = KadecData::where('day',$_endday)->where('hms','>=',$_starthms)->where('hms','<=',$_hms)->get();
         //$test = KadecData::where('day','2022/09/06')->where('hms','>','06:00')->where('hms','<=','12:00')->get();
         //$test = KadecData::where('day','>','2022/08/08')->where('day','<','2022/08/10')->get();
 
