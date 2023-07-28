@@ -5,6 +5,7 @@ use App\Http\Controllers\KadecDataController;
 use App\Http\Controllers\PossDataController;
 use App\Http\Controllers\PredDataController;
 
+use App\Http\Controllers\IrateDataController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,6 +29,9 @@ Route::get('/poss', [PossDataController::class,"index"])
 
 Route::get('/pred', [PredDataController::class,"index"])
    ->name("index_pred");
+
+Route::get('/irate', [IrateDataController::class,"index"])
+   ->name("index_irate");
 
 Route::post('/python', [PredDataController::class,"executePython"]);
 

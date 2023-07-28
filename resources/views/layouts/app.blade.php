@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
-    <title>可能性検討(試作版) v1.1.1</title>
+    <title>可能性検討(試作版) v1.2</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Loading Bootstrap -->
@@ -27,6 +27,9 @@
     </li>
     <li style="display:inline;">
       <a href="pred">■未来24時間の予測値</a>
+    </li>
+    <li style="display:inline;">
+      <a href="irate">■仮説注入機の制御</a>
     </li>
 <ul>
 </div>
