@@ -6,6 +6,9 @@ use App\Http\Controllers\PossDataController;
 use App\Http\Controllers\PredDataController;
 
 use App\Http\Controllers\IrateDataController;
+use App\Http\Controllers\CraftDataController;
+use App\Http\Controllers\Pred1DataController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -30,8 +33,21 @@ Route::get('/poss', [PossDataController::class,"index"])
 Route::get('/pred', [PredDataController::class,"index"])
    ->name("index_pred");
 
+Route::get('/pred1', [Pred1DataController::class,"index"])
+   ->name("index_pred1");
+
 Route::get('/irate', [IrateDataController::class,"index"])
    ->name("index_irate");
+Route::get('/auto', [IrateDataController::class,"auto"])
+   ->name("auto_irate");
+
+Route::get('/craft', [CraftDataController::class,"index"])
+   ->name("index_craft");
+Route::post('/craft', [CraftDataController::class,"index"])
+   ->name("index_craft");
+
+Route::post('/update', [CraftDataController::class,"update"])
+   ->name("update_craft");
 
 Route::post('/python', [PredDataController::class,"executePython"]);
 
