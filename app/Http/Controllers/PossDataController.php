@@ -58,6 +58,11 @@ class PossDataController extends Controller
         $uvb_kadec_log = []; // UVB（KADEC）
         foreach($test as $value){
             $ymh_log[] = substr($value["ymh"],3,9);  
+//            $x1_log[] = $value["x1"];  
+//            $x2_log[] = $value["x2"];
+            $x1_log[] = round($value["x1"] * 110 / $value["ryunyu"] ,2 );  // 注入率に換算      
+            $x2_log[] = round($value["x2"] * 110 / $value["ryunyu"] ,2 );  // 注入率に換算    
+
             $x1_log[] = $value["x1"];  
             $x2_log[] = $value["x2"]; 
             $enso_log[] = $value["enso"] * 10; 

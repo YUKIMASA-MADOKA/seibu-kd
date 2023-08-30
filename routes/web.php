@@ -20,32 +20,29 @@ use App\Http\Controllers\Pred1DataController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+Route::get('/', [Pred1DataController::class,"index"])
+   ->name("index_pred1");
 
 Route::get('/test', [KadecDataController::class,"index"])
    ->name("index_test");
-
 Route::get('/poss', [PossDataController::class,"index"])
    ->name("index_poss");
-
 Route::get('/pred', [PredDataController::class,"index"])
    ->name("index_pred");
 
 Route::get('/pred1', [Pred1DataController::class,"index"])
    ->name("index_pred1");
-
 Route::get('/irate', [IrateDataController::class,"index"])
    ->name("index_irate");
 Route::get('/auto', [IrateDataController::class,"auto"])
    ->name("auto_irate");
-
 Route::get('/craft', [CraftDataController::class,"index"])
    ->name("index_craft");
 Route::post('/craft', [CraftDataController::class,"index"])
    ->name("index_craft");
-
 Route::post('/update', [CraftDataController::class,"update"])
    ->name("update_craft");
 

@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Models\PredData;
-use App\Models\KadecData;
-use App\Models\MlconditionData; // 学習モデル
-use App\Models\T24Data; // 未来
-use App\Models\CraftData; // 職員設定値
+use App\Models\PredData; // 未来24時間分の気象・水質・水量等予測データ（future_data）
+use App\Models\KadecData; // KADEC21データ（trn_kadec_data）
+use App\Models\MlconditionData; // 学習モデル（trn_mlcondition）
+use App\Models\T24Data; // 可能性検討アプリが選択した学習モデル（t24_mlcondition）
+use App\Models\CraftData; // 職員設定の注入率(craftman_rate)
+use App\Models\IrateData; // 仮設注入機連携の注入率（injection_rate） ※自動・手動区分もあり
+use App\Models\VpilData; // pi収集の最新データ（view_pi_latest）
 
 class Pred1DataController extends Controller
 {
@@ -55,6 +57,21 @@ class Pred1DataController extends Controller
         // kadexデータを取得
         $kadecs = KadecData::where('day','>',$_startday)->get();
 
+        // 注入率データ
+        $irate = IrateData::first();
+        $injection_rate = $irate->injection_rate; // 注入率
+        $injection_volume = $irate->injection_volume; // 注入量
+        $ryunyu = $irate->ryunyu; // 流入量
+        $is_automatic = $irate->is_automatic;
+
+        // pi収集最新データを取得
+        $pi1_val = VpilData::where('id','=',1)->value('pi'); // pi1の最新値
+        $pi1_date = VpilData::where('id','=',1)->value('d'); // pi1の最新値の収集日時
+        $pi2_val = VpilData::where('id','=',2)->value('pi'); // pi2の最新値
+        $pi2_date = VpilData::where('id','=',2)->value('d'); // pi2の最新値の収集日時
+        $pi3_val = VpilData::where('id','=',3)->value('pi'); // pi3の最新値
+        $pi3_date = VpilData::where('id','=',3)->value('d'); // pi3の最新値の収集日時
+
         // 未来24時間の予測データを取得
         $preds = PredData::get();
 
@@ -71,10 +88,16 @@ class Pred1DataController extends Controller
             $insolation_log[] = $value["insolation"];    
             $temperature_log[] = $value["temperature"];    
             $humidity_log[] = $value["humidity"];    
-            $y2_log[] = $value["y2"];    
+//            $y2_log[] = $value["y2"];    
+            $y2_log[] = round($value["y2"] * 110 / $ryunyu,2); // 注入率に換算    
 
-            $day = $value["ymd"];
-            $hms = sprintf('%02d',$value["hour"]) . ':00:00';
+            if ($value["hour"] > 0){
+                $day = $value["ymd"];
+                $hms = sprintf('%02d',$value["hour"] -1) . ':00:00';
+            }else{    
+                $day = $value["ymd"] -1;
+                $hms = '00:00:00';
+            }
             $val = CraftData::where('day','=',$day)->where('hms','=',$hms)->value('injection_rate');;
             if ($val) {
                 // 存在する
@@ -93,7 +116,7 @@ class Pred1DataController extends Controller
         $Time1 = $day . " " . $hms;
         $Time2 = date("Y/m/d H:i:s");
         
-        $elapsed_time = (strtotime($Time2) - strtotime($Time1)) / 60;
+        $elapsed_time = round((strtotime($Time2) - strtotime($Time1)) / 60,1);
 
         $uvb = $tail["uvb"];
         $insolation = $tail["insolation"];
@@ -114,6 +137,7 @@ class Pred1DataController extends Controller
             "mlconds" => $mlconds,
             "mlcond_id" => $mlcond_id,
             "label" => $label, // x軸のラベル
+            "is_automatic" => $is_automatic, // 手動・自動の区分（1:自動）
             "green_log" => $green_log, // 緑のログ（UVB)
             "blue_log" => $blue_log, // 青のログ（日射量）
             "yyyy_log" => $yyyy_log, // AI予測の注入率
@@ -141,20 +165,14 @@ class Pred1DataController extends Controller
             "min_windspeed" => $min_windspeed, // KADEC 風速(最小、最大、橙にするしきい値)
             "max_windspeed" => $max_windspeed,
             "high_windspeed" => $high_windspeed,
+            "pi1_val" => $pi1_val, // pi1(残留塩素濃度)の最新データとその収集日時
+            "pi1_date" => $pi1_date,
+            "pi2_val" => $pi2_val, // pi2(伝導率)の最新データとその収集日時
+            "pi2_date" => $pi2_date,
+            "pi3_val" => $pi3_val, // pi3(流入量)の最新データとその収集日時
+            "pi3_date" => $pi3_date,
+            "ryunyu" => $ryunyu, // 流入量（injection_rateにバッチ処理で設定される）
         ]);
  
     }
-
-    public function executePython(Request $request) {
-//        ini_set("max_execution_time",120);
-        ini_set("max_execution_time",config('MAX_EXECUTION_TIME'));
-//        $current = "\\DLEnso2\\bin\\";
-//        $path = $current . "future_data_create.bat " . $current;
-    //    $command = "python " . $path;
-//        $command = $path;
-        $command = config('EXEC_COMMAND_PATH');
-        exec($command, $output);
-        return redirect('pred1');
-    }
-
 }

@@ -11,22 +11,26 @@
    @if (empty($mlcond_id) && empty($mlconditionID))
       <h5>※学習モデルが選択されていません。</h5>
    @else
-      <h5>※学習モデル No.{{$mlcond_id}} 
+      <h5>※学習モデル：「
       @foreach($mlconds as $pref)
          @if ((isset($mlcond_id) && ($mlcond_id == $pref->id)) || (isset($mlconditionID) && ($mlconditionID == $pref->id))) {{ $pref->name }} @endif
       @endforeach
-      を使って予測できます。</h5>
+      」
+      @if (!empty($is_automatic) && ($is_automatic == 1))
+          ※自動更新中（10分間隔で更新）
+      @else
+          ※手動のため停止中
+      @endif
+      </h5>
    @endif
 
 <!-- //* 学習モデルの選択ここから *// -->
 <h3>■学習モデルの指定</h3>
 <div class="search">
-   <form action="{{ route('index_pred') }}" method="GET">
+   <form action="{{ route('index_pred1') }}" method="GET">
       @csrf
-
       <div class="form-group">
-
-         <label for="" style="display:inline;">学習モデル
+         <label for="" style="display:inline;">学習モデル（機械学習でお気に入り登録したものを選択できます。）
             <select type="text" class="form-control" id="mlcond" name="mlcond" required>
                 <option disabled style='display:none;' @if (empty($mlcond_id)) selected @endif>選択してください</option>
                 @foreach($mlconds as $pref)
@@ -34,13 +38,6 @@
                 @endforeach
             </select>
             <input type="submit" class="btn" value="モデルを設定">
-
-            <!-- AIで予測の実行（バッチ起動） -->
-            @if ((!empty($mlcond_id)) || (!empty($mlconditionID)))
-            <form action="python" method="POST">
-               <input type="submit" class="btn" name="submit" value="このモデルで予測">
-            </form>
-            @endif
          </label>
       </div>
    </form>
@@ -53,27 +50,33 @@
    <h3>■現在値・推定消費量・天気予報</h3>
    <table>
    <tr>
-   @if($elapsed_time > 120)
-      <th>KADEC測定値<span style="color:#FF0000;">　通信切れの可能性あり</span></th><th>天気予報</th>
-   @else
-      <th>KADEC測定値</th><th>天気予報</th>
-   @endif
+      <th>KADEC測定値
+      @if($elapsed_time > 120)
+          <span style="color:#FF0000;">　通信切れの可能性あり</span>
+      @endif   
+      </th><th>天気予報</th><th>3か月平均流入量とRaspberry PI収集値</th>
    </tr>
    <tr>
-   <td>
-   <div>
-   <p><dt style="display:inline;">時刻：</dt><dd style="display:inline; ">{{$day}} {{$hms}} 現在 ({{$elapsed_time}}分経過)</dd></p>
-   <p><dt style="display:inline;">UVB：</dt><dd style="display:inline;"><meter value={{$uvb}} high={{$high_uvb}} min={{$min_uvb}} max={{$max_uvb}}></meter> {{($uvb)}}　（min{{$min_uvb}}　max{{$max_uvb}}）</dd></p>
-   <p><dt style="display:inline;">日照：</dt><dd style="display:inline;"><meter value={{$insolation}} high={{$high_insolation}} min={{$min_insolation}} max={{$max_insolation}}></meter> {{$insolation}}　（min{{$min_insolation}}　max{{$max_insolation}}）</dd></p>
-   <p><dt style="display:inline;">気温：</dt><dd style="display:inline;"><meter value={{$temperature}} high={{$high_temperature}} min={{$min_temperature}} max={{$max_temperature}}></meter> {{$temperature}}°　（min{{$min_temperature}}　max{{$max_temperature}}）</dd></p>
-   <p><dt style="display:inline;">湿度：</dt><dd style="display:inline;"><meter value={{$humidity}} high={{$high_humidity}} min={{$min_humidity}} max={{$max_humidity}}></meter> {{$humidity}}％　（min{{$min_humidity}}　max{{$max_humidity}}）</dd></p>
-   <p><dt style="display:inline;">風速：</dt><dd style="display:inline;"><meter value={{$windspeed}} high={{$high_windspeed}} min={{$min_windspeed}} max={{$max_windspeed}}></meter> {{$windspeed}}　（min{{$min_windspeed}}　max{{$max_windspeed}}）</dd></p>
-   </div>
-   </td>
-
-   <td>
-   <div id="ww_47bedf087800e" v='1.3' loc='id' a='{"t":"horizontal","lang":"ja","sl_lpl":1,"ids":["wl6951"],"font":"Arial","sl_ics":"one_a","sl_sot":"celsius","cl_bkg":"image","cl_font":"#FFFFFF","cl_cloud":"#FFFFFF","cl_persp":"#81D4FA","cl_sun":"#FFC107","cl_moon":"#FFC107","cl_thund":"#FF5722"}'>Weather for the Following Location: <a href="https://2ua.org/jpn/iwata/map/" id="ww_47bedf087800e_u" target="_blank">Iwata map, Japan</a></div><script async src="https://app1.weatherwidget.org/js/?id=ww_47bedf087800e"></script>
-   </td>
+      <td>
+      <div>
+      <p><dt style="display:inline;">時刻：</dt><dd style="display:inline; ">{{$day}} {{$hms}} 現在 ({{$elapsed_time}}分経過)</dd></p>
+      <p><dt style="display:inline;">UVB：</dt><dd style="display:inline;"><meter value={{$uvb}} high={{$high_uvb}} min={{$min_uvb}} max={{$max_uvb}}></meter> {{($uvb)}}　（min{{$min_uvb}}　max{{$max_uvb}}）</dd></p>
+      <p><dt style="display:inline;">日照：</dt><dd style="display:inline;"><meter value={{$insolation}} high={{$high_insolation}} min={{$min_insolation}} max={{$max_insolation}}></meter> {{$insolation}}　（min{{$min_insolation}}　max{{$max_insolation}}）</dd></p>
+      <p><dt style="display:inline;">気温：</dt><dd style="display:inline;"><meter value={{$temperature}} high={{$high_temperature}} min={{$min_temperature}} max={{$max_temperature}}></meter> {{$temperature}}°　（min{{$min_temperature}}　max{{$max_temperature}}）</dd></p>
+      <p><dt style="display:inline;">湿度：</dt><dd style="display:inline;"><meter value={{$humidity}} high={{$high_humidity}} min={{$min_humidity}} max={{$max_humidity}}></meter> {{$humidity}}％　（min{{$min_humidity}}　max{{$max_humidity}}）</dd></p>
+      <p><dt style="display:inline;">風速：</dt><dd style="display:inline;"><meter value={{$windspeed}} high={{$high_windspeed}} min={{$min_windspeed}} max={{$max_windspeed}}></meter> {{$windspeed}}　（min{{$min_windspeed}}　max{{$max_windspeed}}）</dd></p>
+      </div>
+      </td>
+      <td>
+      <div id="ww_47bedf087800e" v='1.3' loc='id' a='{"t":"horizontal","lang":"ja","sl_lpl":1,"ids":["wl6951"],"font":"Arial","sl_ics":"one_a","sl_sot":"celsius","cl_bkg":"image","cl_font":"#FFFFFF","cl_cloud":"#FFFFFF","cl_persp":"#81D4FA","cl_sun":"#FFC107","cl_moon":"#FFC107","cl_thund":"#FF5722"}'>Weather for the Following Location: <a href="https://2ua.org/jpn/iwata/map/" id="ww_47bedf087800e_u" target="_blank">Iwata map, Japan</a></div><script async src="https://app1.weatherwidget.org/js/?id=ww_47bedf087800e"></script>
+      </td>
+      <td>
+      
+      <p><dt style="display:inline;">3か月平均流入量：</dt><dd style="display:inline;"><meter value={{ $ryunyu }} min=0 max=2000></meter> {{ $ryunyu }}</dd></p>
+      <p><dt style="display:inline;">PI1(残塩濃度)：</dt><dd style="display:inline;"><meter value={{$pi1_val}} min=0 max=0.1></meter> {{($pi1_val)}}　（{{$pi1_date}}　）</dd></p>
+      <p><dt style="display:inline;">PI2(伝導率)：</dt><dd style="display:inline;"><meter value={{$pi2_val}} min=0 max=200></meter> {{($pi2_val)}}　（{{$pi2_date}}　）</dd></p>
+      <p><dt style="display:inline;">PI3(流入量)：</dt><dd style="display:inline;"><meter value={{$pi3_val}} min=0 max=2000></meter> {{($pi3_val)}}　（{{$pi3_date}}　）</dd></p>
+      </td>
 
    </tr>
    </table>
@@ -165,12 +168,13 @@
 <script>
 // 現在表示されているページをリロードする
 //location.reload();
-// 例: 60秒に一回リロード
-// 実際には10分に1回でかつ再読み込みアイコンを配置したほうがいい
-//setTimeout("location.reload()",60000);
+// 例: 60秒に一回リロード（1/1000sec単位なので）⇒　60000
+// 実際には10分に1回（600000）でかつ再読み込みアイコンを配置したほうがいい
+@if (!empty($is_automatic) && ($is_automatic == 1))
+setTimeout("location.reload()",60000);
+@endif
 // 上の行wのコメントを外せばリロードされる
 // ※日付指定にした場合は、
-
 </script>
 @endsection('script')
 

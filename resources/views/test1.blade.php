@@ -46,7 +46,7 @@
    <h3>■ログ（緑：UVB　青：日射量）</h3>
    <canvas id="graph-area2" height="450" width="1200"></canvas>
 
-   <h3>■ログ（気温：UVB　赤：湿度）</h3>
+   <h3>■ログ（橙：気温　赤：湿度）</h3>
    <canvas id="graph-area3" height="200" width="1200"></canvas>
 @endsection('content')
 

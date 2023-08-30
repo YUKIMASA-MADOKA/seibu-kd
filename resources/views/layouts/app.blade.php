@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
-    <title>可能性検討(試作版) v1.2.1</title>
+    <title>可能性検討(試作版) v1.3.1</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Loading Bootstrap -->
@@ -23,16 +23,16 @@
       <a href="test">■KADECの現在値から消費量を推測</a>
     </li>
     <li style="display:inline;">
-      <a href="poss">■過去の投入値と推測値の比較</a>
+      <a href="poss">■過去の注入率と推測値の比較</a>
     </li>
     <li style="display:inline;">
       <a href="pred">■未来24時間の予測値</a>
     </li>
     <li style="display:inline;">
-      <a href="irate">■仮説注入機の制御</a>
+      <a href="craft">■職員設定値の入力</a>
     </li>
     <li style="display:inline;">
-      <a href="craft">■職員設定値の入力</a>
+      <a href="irate">■仮設注入機の制御</a>
     </li>
     <li style="display:inline;">
       <a href="pred1">■未来24時間の予測値（新）</a>

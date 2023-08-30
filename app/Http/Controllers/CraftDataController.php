@@ -4,17 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Models\CraftData;
+use App\Models\CraftData; // 職員設定の注入率(craftman_rate)
 use DateTime;
 
 class CraftDataController extends Controller
 {
-
-    // 職員設定の注入率の設定(craftman_rate)
-    public function auto(Request $request)
-    {
-        return redirect('craft');
-    }
 
     // 職員設定の注入率の設定(craftman_rate)
     public function update(Request $request)
@@ -36,7 +30,7 @@ class CraftDataController extends Controller
         return redirect('craft');
     }
 
-        // 職員設定の注入率の設定(craftman_rate)
+    // 職員設定の注入率の設定(craftman_rate)
     public function index(Request $request)
     {
         // 設定日の初期値は本日
@@ -50,7 +44,7 @@ class CraftDataController extends Controller
         }
 
         // デバック用の変数（画面表示用）
-        $debug = '';
+        // $debug = '';
 
         // 時間の配列
         $timearray = array('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23');
@@ -84,7 +78,7 @@ class CraftDataController extends Controller
             "startday" => $startday,
             "idarray" => $idarray,
             "crafts" => $crafts,
-            "debug" => $debug,
+        //    "debug" => $debug,
         ]);
  
     }

@@ -46,10 +46,10 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
-   <h3>■注入量のログ（緑：投入量　青：計算値　橙：沈殿池入口残留塩素）</h3>
+   <h3>■注入率のログ（緑：注入率　青：計算値　橙：沈殿池出口残留塩素）</h3>
    <canvas id="graph-area1" height="450" width="1200"></canvas>
 
-   <h3>■水温と気温のログ（青：太田川着水井の水温　黄：気象庁の水温　赤：KADECの気温）</h3>
+   <h3>■水温と気温のログ（青：太田川着水井の水温　黄：気象庁の気温　赤：KADECの気温）</h3>
    <canvas id="graph-area2" height="450" width="1200"></canvas>
 
    <h3>■日射量のログ（黄：気象庁　赤：KADEC日射量　青：KADECのUVB）</h3>
