@@ -9,11 +9,15 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
-   <h3>■設定日を入力（日ごとに設定）</h3>
+   <h3>■設定日を入力（最大５日分）</h3>
    <form action="{{ route('index_craft') }}" method="GET">
       @csrf
       <div style="display:inline;">
          <input type="date" name="date_from" value="{{ $startday }}">
+         <input type="time" name="time_from" value="{{ $starttime }}">
+         から
+         <input type="date" name="date_to" value="{{ $endday }}">
+         <input type="time" name="time_to" value="{{ $endtime }}">
          <input type="submit" class="btn" value="検索">
       </div>
    </form>
@@ -22,6 +26,7 @@
    <form action="{{ route('update_craft') }}" method="POST">
       @csrf
       <input type="hidden" name="idarray" id="idarray" value={{ $idarray }}/>
+      <input type="hidden" name="idcnt" id="idcnt" value={{ $idcnt }}/>
       
       <div style="display:inline;">0.05を単位に増減する0.00から2.50までの値で注入率を設定してください。<input type="submit" class="btn" value="この値で設定する"></div>
       <table class="table">

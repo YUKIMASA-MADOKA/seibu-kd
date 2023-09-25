@@ -14,7 +14,7 @@ class CraftData extends Model
 //    public $timestamps = false;
 //    public $incrementing = false;
 
-    protected $fillable = ['day','hms','injection_rate'];
+    protected $fillable = ['day','hms','injection_rate','day_hms'];
 
     public function __construct(array $attributes = [])
     {

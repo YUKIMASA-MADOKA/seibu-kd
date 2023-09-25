@@ -60,12 +60,14 @@ class PossDataController extends Controller
             $ymh_log[] = substr($value["ymh"],3,9);  
 //            $x1_log[] = $value["x1"];  
 //            $x2_log[] = $value["x2"];
-            $x1_log[] = round($value["x1"] * 110 / $value["ryunyu"] ,2 );  // 注入率に換算      
-            $x2_log[] = round($value["x2"] * 110 / $value["ryunyu"] ,2 );  // 注入率に換算    
-
-            $x1_log[] = $value["x1"];  
-            $x2_log[] = $value["x2"]; 
-            $enso_log[] = $value["enso"] * 10; 
+//            $enso_log[] = $value["enso"] * 10;
+            $ryunyu = $value["ryunyu"];
+            if ($ryunyu < 1){
+                $ryunyu = 1;
+            } 
+            $x1_log[] = round($value["x1"] * 110 / $ryunyu ,2 );  // 注入率に換算      
+            $x2_log[] = round($value["x2"] * 110 / $ryunyu ,2 );  // 注入率に換算    
+            $enso_log[] = $value["enso"]; 
        
             $suion_log[] = $value["suion"]; 
             $temperature_log[] = $value["jma_temperature"]; 

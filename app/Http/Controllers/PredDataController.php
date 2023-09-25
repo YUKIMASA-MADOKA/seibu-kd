@@ -17,7 +17,8 @@ class PredDataController extends Controller
         // kadecの起点はuvb計測が始まる'2022/08/14' とする
         $_startday = '2022/08/14';
         // 学習モデル一覧を取得
-        $mlconds = MlconditionData::where('favorite','=',1)->get();
+#        $mlconds = MlconditionData::where('favorite','=',1)->get();
+        $mlconds = MlconditionData::where('favorite','=',1)->orderByRaw("id desc")->get();
 
         // 予測用モデルの選択値をデータベースから取得
         $t24 = T24Data::first();
